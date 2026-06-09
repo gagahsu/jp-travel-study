@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>沖繩日語學習 — 9月出發倒數</title>
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+<script src="data/kana.js"></script>
 <style>
   :root {
     --ink: #1a2744;
@@ -1347,8 +1348,6 @@ let hwIndex = 0;
 let hwKanaType = 'hira';
 let hwDrawing = false;
 let hwShowGuide = false;
-let kanaStrokeData = null;
-let kanaStrokeDataReady = fetch('./data/kana.json').then(r => r.json()).then(d => { kanaStrokeData = d; });
 let hwCtx = null;
 let hwWriter = null;
 
@@ -1475,13 +1474,8 @@ function hwStrokeOrder() {
       delayBetweenStrokes: 400,
       showCharacter: true,
       charDataLoader: (char, onLoad, onError) => {
-        kanaStrokeDataReady.then(() => {
-          if (kanaStrokeData && kanaStrokeData[char]) {
-            onLoad(kanaStrokeData[char]);
-          } else {
-            onError();
-          }
-        }).catch(onError);
+        const d = window.KANA_STROKE_DATA && window.KANA_STROKE_DATA[char];
+        if (d) { onLoad(d); } else { onError(); }
       },
       onLoadCharDataSuccess: () => {
         btn.textContent = '關閉';
