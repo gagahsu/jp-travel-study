@@ -1348,8 +1348,7 @@ let hwKanaType = 'hira';
 let hwDrawing = false;
 let hwShowGuide = false;
 let kanaStrokeData = null;
-
-fetch('./data/kana.json').then(r => r.json()).then(d => { kanaStrokeData = d; });
+let kanaStrokeDataReady = fetch('./data/kana.json').then(r => r.json()).then(d => { kanaStrokeData = d; });
 let hwCtx = null;
 let hwWriter = null;
 
@@ -1476,11 +1475,13 @@ function hwStrokeOrder() {
       delayBetweenStrokes: 400,
       showCharacter: true,
       charDataLoader: (char, onLoad, onError) => {
-        if (kanaStrokeData && kanaStrokeData[char]) {
-          onLoad(kanaStrokeData[char]);
-        } else {
-          onError();
-        }
+        kanaStrokeDataReady.then(() => {
+          if (kanaStrokeData && kanaStrokeData[char]) {
+            onLoad(kanaStrokeData[char]);
+          } else {
+            onError();
+          }
+        }).catch(onError);
       },
       onLoadCharDataSuccess: () => {
         btn.textContent = '關閉';
