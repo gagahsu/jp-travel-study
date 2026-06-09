@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>沖繩日語學習 — 9月出發倒數</title>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+<style>
+  :root {
+    --ink: #1a2744;
+    --ink-light: #2d3f6b;
+    --coral: #e8594a;
+    --coral-light: #fdf0ee;
+    --sand: #f7f4ef;
+    --white: #ffffff;
+    --muted: #6b7280;
+    --border: #e5e2db;
+    --green: #2e7d52;
+    --green-bg: #edf7f2;
+    --amber: #b45309;
+    --amber-bg: #fef3c7;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Sans', 'Noto Sans TC', system-ui, sans-serif; background: var(--sand); color: var(--ink); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; }
+  .nav-brand { color: white; font-size: 18px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
+  .nav-brand span.kana { font-size: 22px; color: #f0a896; }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab { color: rgba(255,255,255,0.6); font-size: 13px; padding: 6px 14px; border-radius: 6px; cursor: pointer; border: none; background: none; transition: all 0.15s; white-space: nowrap; }
+  .nav-tab:hover { color: white; background: rgba(255,255,255,0.1); }
+  .nav-tab.active { color: white; background: var(--coral); }
+  .countdown-badge { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9); font-size: 12px; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+
+  /* PANELS */
+  .panel { display: none; padding: 28px 24px; max-width: 860px; margin: 0 auto; }
+  .panel.active { display: block; }
+
+  /* DASHBOARD */
+  .hero-kana { font-size: 80px; color: rgba(26,39,68,0.07); font-weight: 700; line-height: 1; margin-bottom: -20px; }
+  .hero-title { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  .hero-sub { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .stat-card { background: var(--white); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 28px; font-weight: 600; color: var(--ink); }
+  .stat-unit { font-size: 13px; color: var(--muted); margin-left: 4px; }
+  .progress-bar-wrap { background: var(--border); border-radius: 4px; height: 6px; margin-top: 8px; overflow: hidden; }
+  .progress-bar { background: var(--coral); height: 100%; border-radius: 4px; transition: width 0.5s; }
+
+  .section-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: var(--ink); }
+  .today-tasks { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .task-row { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: border-color 0.15s; }
+  .task-row:hover { border-color: var(--coral); }
+  .task-row.done { opacity: 0.5; }
+  .task-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .task-row.done .task-check { background: var(--green); border-color: var(--green); }
+  .task-check svg { display: none; }
+  .task-row.done .task-check svg { display: block; }
+  .task-text { flex: 1; font-size: 14px; }
+  .task-time { font-size: 12px; color: var(--muted); }
+  .phase-timeline { display: flex; flex-direction: column; gap: 0; }
+  .phase-item { display: flex; gap: 16px; padding: 0 0 20px 0; }
+  .phase-dot-col { display: flex; flex-direction: column; align-items: center; }
+  .phase-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .phase-line { width: 2px; background: var(--border); flex: 1; margin-top: 4px; }
+  .phase-item:last-child .phase-line { display: none; }
+  .phase-dot.done { background: var(--green); }
+  .phase-dot.current { background: var(--coral); }
+  .phase-dot.upcoming { background: var(--border); }
+  .phase-content { flex: 1; }
+  .phase-name { font-size: 14px; font-weight: 500; }
+  .phase-dates { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* HIRAGANA */
+  .kana-intro { background: var(--ink); color: white; border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; }
+  .kana-big { font-size: 64px; line-height: 1; color: rgba(255,255,255,0.15); font-weight: 700; flex-shrink: 0; }
+  .kana-intro-text h2 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .kana-intro-text p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .week-selector { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .week-btn { padding: 7px 18px; border-radius: 20px; border: 1px solid var(--border); background: var(--white); font-size: 13px; cursor: pointer; transition: all 0.15s; color: var(--ink); }
+  .week-btn:hover { border-color: var(--coral); color: var(--coral); }
+  .week-btn.active { background: var(--coral); border-color: var(--coral); color: white; font-weight: 500; }
+  .kana-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .kana-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 8px 8px; text-align: center; cursor: pointer; transition: all 0.15s; user-select: none; }
+  .kana-card:hover { border-color: var(--coral); transform: translateY(-1px); }
+  .kana-card.mastered { border-color: var(--green); background: var(--green-bg); }
+  .kana-char { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--ink); }
+  .kana-rom { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .kana-card.mastered .kana-rom { color: var(--green); }
+  .kana-say-btn { margin-top: 8px; width: 100%; font-size: 11px; padding: 4px 0; border-radius: 5px; border: 1px solid var(--border); background: var(--sand); cursor: pointer; color: var(--muted); transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 3px; }
+  .kana-say-btn:hover { background: var(--coral-light); border-color: var(--coral); color: var(--coral); }
+  .kana-card.mastered .kana-say-btn { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .kana-tip-box { background: var(--amber-bg); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.7; color: var(--amber); border-left: 3px solid #d97706; border-radius: 0 var(--radius) var(--radius) 0; }
+  .audio-hint { font-size: 12px; color: var(--muted); text-align: center; margin-top: -6px; margin-bottom: 14px; }
+
+  /* PHRASES */
+  .scene-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .scene-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--white); font-size: 13px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; color: var(--ink); }
+  .scene-btn:hover { border-color: var(--coral); }
+  .scene-btn.active { background: var(--ink); border-color: var(--ink); color: white; }
+  .phrase-list { display: flex; flex-direction: column; gap: 10px; }
+  .phrase-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: box-shadow 0.15s; }
+  .phrase-card:hover { box-shadow: 0 2px 12px rgba(26,39,68,0.08); }
+  .phrase-jp { font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
+  .phrase-reading { font-size: 13px; color: var(--coral); margin-bottom: 6px; letter-spacing: 0.3px; }
+  .phrase-zh { font-size: 14px; color: var(--muted); }
+  .phrase-tags { display: flex; gap: 6px; margin-top: 10px; }
+  .phrase-tag { font-size: 11px; background: var(--sand); color: var(--muted); padding: 2px 8px; border-radius: 10px; }
+  .phrase-tag.must { background: var(--coral-light); color: var(--coral); }
+  .say-btn { margin-left: auto; font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: none; cursor: pointer; color: var(--muted); display: flex; align-items: center; gap: 4px; transition: all 0.15s; }
+  .say-btn:hover { border-color: var(--coral); color: var(--coral); }
+  .phrase-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .phrase-btns { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .rec-btn { font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: none; cursor: pointer; color: var(--muted); display: flex; align-items: center; gap: 4px; transition: all 0.15s; }
+  .rec-btn:hover { border-color: #ef4444; color: #ef4444; }
+  .rec-btn.recording { border-color: #ef4444; color: white; background: #ef4444; animation: pulse-rec 1s infinite; }
+  @keyframes pulse-rec { 0%,100% { opacity: 1 } 50% { opacity: 0.7 } }
+  .phrase-feedback { margin-top: 10px; padding: 10px 12px; border-radius: var(--radius); font-size: 13px; line-height: 1.6; display: none; }
+  .phrase-feedback.show { display: block; }
+  .phrase-feedback.good { background: var(--green-bg); color: #1a5c35; border-left: 3px solid var(--green); border-radius: 0 var(--radius) var(--radius) 0; }
+  .phrase-feedback.warn { background: var(--amber-bg); color: #7c4a00; border-left: 3px solid #d97706; border-radius: 0 var(--radius) var(--radius) 0; }
+  .phrase-feedback.loading { background: var(--sand); color: var(--muted); }
+  .heard-text { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+
+  /* AI PRACTICE */
+  .ai-scene-select { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .ai-scene-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px 14px; cursor: pointer; transition: all 0.15s; text-align: center; }
+  .ai-scene-card:hover { border-color: var(--coral); }
+  .ai-scene-card.selected { border-color: var(--coral); background: var(--coral-light); }
+  .ai-scene-icon { font-size: 28px; margin-bottom: 8px; }
+  .ai-scene-name { font-size: 13px; font-weight: 500; }
+  .ai-scene-desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+  .chat-area { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; }
+  .chat-header { background: var(--ink); color: white; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .chat-header .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+  .chat-messages { padding: 16px; min-height: 260px; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 80%; }
+  .msg.ai { align-self: flex-start; }
+  .msg.user { align-self: flex-end; }
+  .msg-bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+  .msg.ai .msg-bubble { background: var(--sand); color: var(--ink); border-radius: 4px 12px 12px 12px; }
+  .msg.user .msg-bubble { background: var(--coral); color: white; border-radius: 12px 4px 12px 12px; }
+  .msg-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .msg.user .msg-label { justify-content: flex-end; }
+  .msg-play-btn { background: none; border: 1px solid var(--border); border-radius: 50%; width: 22px; height: 22px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--muted); transition: all 0.15s; padding: 0; flex-shrink: 0; }
+  .msg-play-btn:hover { border-color: var(--coral); color: var(--coral); }
+  .msg-play-btn.playing { border-color: var(--coral); color: var(--coral); }
+  .chat-input-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--sand); }
+  .chat-input-row input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; background: white; font-family: inherit; color: var(--ink); outline: none; }
+  .chat-input-row input:focus { border-color: var(--coral); }
+  .send-btn { padding: 10px 18px; background: var(--coral); color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-family: inherit; white-space: nowrap; transition: opacity 0.15s; }
+  .send-btn:hover { opacity: 0.9; }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .hint-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .hint-chip { font-size: 12px; padding: 5px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--muted); transition: all 0.15s; }
+  .hint-chip:hover { border-color: var(--coral); color: var(--coral); }
+  .api-key-row { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; }
+  .api-key-row label { font-size: 13px; white-space: nowrap; color: var(--muted); }
+  .api-key-row input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: monospace; color: var(--ink); outline: none; }
+  .api-key-row input:focus { border-color: var(--coral); }
+  .api-save-btn { padding: 8px 14px; background: var(--ink); color: white; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .api-notice { font-size: 12px; color: var(--muted); margin-bottom: 16px; background: var(--sand); padding: 10px 14px; border-radius: var(--radius); line-height: 1.6; }
+
+  /* QUIZ */
+  .quiz-start { text-align: center; padding: 40px 20px; }
+  .quiz-start h2 { font-size: 22px; margin-bottom: 10px; }
+  .quiz-start p { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+  .start-btn { background: var(--coral); color: white; border: none; border-radius: var(--radius); font-size: 15px; padding: 14px 36px; cursor: pointer; font-family: inherit; font-weight: 500; }
+  .quiz-q { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; text-align: center; margin-bottom: 20px; }
+  .quiz-prompt-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .quiz-question { font-size: 48px; font-weight: 400; color: var(--ink); margin-bottom: 8px; }
+  .quiz-question.sm { font-size: 20px; padding: 0 20px; line-height: 1.5; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quiz-opt { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px; font-size: 16px; cursor: pointer; transition: all 0.15s; font-family: inherit; color: var(--ink); }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--coral); }
+  .quiz-opt.correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .quiz-opt.wrong { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+  .quiz-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 13px; color: var(--muted); }
+  .q-score { background: var(--sand); border-radius: 20px; padding: 3px 12px; font-weight: 500; color: var(--ink); }
+  .quiz-result { text-align: center; padding: 40px 20px; }
+  .result-score { font-size: 60px; font-weight: 700; color: var(--coral); }
+  .result-msg { font-size: 18px; margin: 10px 0; }
+  .result-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+  .retry-btn { background: var(--ink); color: white; border: none; border-radius: var(--radius); font-size: 14px; padding: 12px 28px; cursor: pointer; font-family: inherit; }
+
+  .hidden { display: none !important; }
+  .loading-dots::after { content: '⋯'; animation: dots 1s infinite; }
+  @keyframes dots { 0%,100% { content: '⋯' } 33% { content: '。。。' } 66% { content: '・・・' } }
+
+  /* BOTTOM NAV (mobile) */
+  .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ink); border-top: 1px solid rgba(255,255,255,0.1); z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
+  .bottom-nav-inner { display: flex; }
+  .bnav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px 8px; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 10px; cursor: pointer; font-family: inherit; transition: color 0.15s; }
+  .bnav-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .bnav-btn.active { color: var(--coral); }
+  .bnav-btn.active svg { stroke: var(--coral); }
+
+  /* JAPANESE KEYBOARD */
+  .jp-keyboard { background: var(--sand); border-top: 1px solid var(--border); padding: 8px 6px 6px; }
+  .jp-kb-tabs { display: flex; gap: 4px; margin-bottom: 6px; }
+  .jp-kb-tab { flex: 1; padding: 5px; font-size: 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--white); cursor: pointer; color: var(--muted); text-align: center; transition: all 0.15s; }
+  .jp-kb-tab.active { background: var(--ink); color: white; border-color: var(--ink); }
+  .jp-kb-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .jp-kb-row { display: contents; }
+  .jp-key { background: var(--white); border: 1px solid var(--border); border-radius: 7px; padding: 8px 2px; font-size: 16px; text-align: center; cursor: pointer; transition: all 0.1s; user-select: none; display: flex; flex-direction: column; align-items: center; line-height: 1.2; }
+  .jp-key:active { background: var(--coral-light); border-color: var(--coral); transform: scale(0.94); }
+  .jp-key .rom { font-size: 9px; color: var(--muted); }
+  .jp-key.special { background: var(--sand); font-size: 13px; color: var(--muted); }
+  .jp-key.special:active { background: #ddd; }
+
+  /* HANDWRITING */
+  .hw-container { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; }
+  .hw-header { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .hw-char-display { font-size: 72px; color: rgba(26,39,68,0.08); font-weight: 700; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; user-select: none; }
+  .hw-canvas-wrap { position: relative; }
+  canvas#hw-canvas { display: block; touch-action: none; cursor: crosshair; }
+  .hw-actions { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--sand); }
+  .hw-btn { flex: 1; padding: 10px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 14px; cursor: pointer; font-family: inherit; color: var(--ink); transition: all 0.15s; }
+  .hw-btn:hover { border-color: var(--coral); color: var(--coral); }
+  .hw-btn.primary { background: var(--coral); color: white; border-color: var(--coral); }
+  .hw-btn.primary:hover { opacity: 0.9; }
+  .hw-nav { display: flex; align-items: center; gap: 12px; }
+  .hw-nav-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 12px; font-size: 18px; cursor: pointer; color: var(--ink); }
+  .hw-progress-text { font-size: 13px; color: var(--muted); }
+  .hw-result { text-align: center; padding: 10px; font-size: 13px; color: var(--muted); min-height: 28px; }
+  .hw-result.good { color: var(--green); font-weight: 500; }
+  .hw-result.ok { color: var(--amber); }
+  .hw-mode-btn { padding: 6px 14px; border-radius: 16px; border: 1px solid var(--border); background: var(--white); font-size: 12px; cursor: pointer; color: var(--muted); transition: all 0.15s; }
+  .hw-mode-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+  @media (max-width: 640px) {
+    nav .countdown-badge { display: none; }
+    nav .nav-tabs { display: none; }
+    nav { height: 48px; }
+    .nav-brand { font-size: 16px; }
+    .bottom-nav { display: block; }
+    .panel { padding: 16px 12px 90px; }
+    .hero-kana { font-size: 48px; }
+    .hero-title { font-size: 20px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .kana-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .kana-card { padding: 8px 4px 6px; }
+    .kana-char { font-size: 22px; }
+    .kana-say-btn { font-size: 10px; padding: 3px 0; }
+    .quiz-question { font-size: 36px; }
+    .quiz-options { grid-template-columns: 1fr; }
+    .ai-scene-select { grid-template-columns: repeat(2, 1fr); }
+    .phase-grid { grid-template-columns: 1fr; }
+    .week-selector { gap: 6px; }
+    .week-btn { font-size: 12px; padding: 6px 10px; }
+    .chat-messages { max-height: 45vh; }
+    .kana-intro { flex-direction: column; gap: 10px; padding: 14px; }
+    .kana-big { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="kana">あ</span>
+    沖繩日語
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPanel('dashboard')">首頁</button>
+    <button class="nav-tab" onclick="showPanel('hiragana')">五十音</button>
+    <button class="nav-tab" onclick="showPanel('phrases')">旅遊短句</button>
+    <button class="nav-tab" onclick="showPanel('practice')">AI 練習</button>
+    <button class="nav-tab" onclick="showPanel('quiz')">測驗</button>
+  </div>
+  <div class="countdown-badge" id="countdown-badge">計算中...</div>
+</nav>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-btn active" onclick="showPanel('dashboard')" data-panel="dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      首頁
+    </button>
+    <button class="bnav-btn" onclick="showPanel('hiragana')" data-panel="hiragana">
+      <svg viewBox="0 0 24 24"><text y="18" font-size="16" fill="currentColor" stroke="none" font-family="serif">あ</text></svg>
+      五十音
+    </button>
+    <button class="bnav-btn" onclick="showPanel('phrases')" data-panel="phrases">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      短句
+    </button>
+    <button class="bnav-btn" onclick="showPanel('practice')" data-panel="practice">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      AI練習
+    </button>
+    <button class="bnav-btn" onclick="showPanel('quiz')" data-panel="quiz">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      測驗
+    </button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="panel active" id="panel-dashboard">
+  <div class="hero-kana">あ</div>
+  <div class="hero-title">こんにちは！今天來練習吧</div>
+  <div class="hero-sub">距離沖繩出發還有 <strong id="days-left">—</strong> 天，每天 40 分鐘穩穩達標。</div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">已學假名</div>
+      <div class="stat-value" id="stat-kana">0<span class="stat-unit">/ 46</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="bar-kana" style="width:0%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">旅遊短句</div>
+      <div class="stat-value">28<span class="stat-unit">句</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">今日測驗</div>
+      <div class="stat-value" id="stat-quiz">—<span class="stat-unit">分</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="bar-quiz" style="width:0%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">學習天數</div>
+      <div class="stat-value" id="stat-days">1<span class="stat-unit">天</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="bar-days" style="width:1%"></div></div>
+    </div>
+  </div>
+
+  <div class="section-title">今日任務</div>
+  <div class="today-tasks" id="today-tasks">
+    <div class="task-row" onclick="toggleTask(this, 'hiragana')">
+      <div class="task-check"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="task-text"><strong>五十音</strong> — 學習「あ行」5個假名</div>
+      <div class="task-time">10 分鐘</div>
+    </div>
+    <div class="task-row" onclick="toggleTask(this, 'phrases')">
+      <div class="task-check"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="task-text"><strong>旅遊短句</strong> — 跟讀飯店情境 5 句</div>
+      <div class="task-time">10 分鐘</div>
+    </div>
+    <div class="task-row" onclick="toggleTask(this, 'practice')">
+      <div class="task-check"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="task-text"><strong>AI 對話</strong> — 模擬飯店 check-in</div>
+      <div class="task-time">15 分鐘</div>
+    </div>
+    <div class="task-row" onclick="toggleTask(this, 'quiz')">
+      <div class="task-check"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="task-text"><strong>每日測驗</strong> — 10 題假名 + 短句</div>
+      <div class="task-time">10 分鐘</div>
+    </div>
+  </div>
+
+  <div class="section-title">學習進度</div>
+  <div class="phase-timeline">
+    <div class="phase-item">
+      <div class="phase-dot-col"><div class="phase-dot current"></div><div class="phase-line"></div></div>
+      <div class="phase-content"><div class="phase-name">第一階段：基礎建立</div><div class="phase-dates">6/9 – 6/30 · 五十音 + 50 個核心單字</div></div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-dot-col"><div class="phase-dot upcoming"></div><div class="phase-line"></div></div>
+      <div class="phase-content"><div class="phase-name">第二階段：旅遊情境衝刺</div><div class="phase-dates">7/1 – 8/10 · 飯店、餐廳、租車、遊樂園</div></div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-dot-col"><div class="phase-dot upcoming"></div></div>
+      <div class="phase-content"><div class="phase-name">第三階段：聽說強化</div><div class="phase-dates">8/11 – 9/4 · 模擬對話 + 緊急用語</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HIRAGANA -->
+<div class="panel" id="panel-hiragana">
+  <div class="kana-intro">
+    <div class="kana-big">あ</div>
+    <div class="kana-intro-text">
+      <h2>平假名 — 46 個基本字</h2>
+      <p>點擊假名可以聽發音，點兩下標記為「已學會」。<br>建議每週學一組，先把形狀記住，再練發音。</p>
+    </div>
+  </div>
+
+  <div class="week-selector">
+    <button class="week-btn active" onclick="selectWeek(0, this)">第 1 週 — あ行～か行</button>
+    <button class="week-btn" onclick="selectWeek(1, this)">第 2 週 — さ行～な行</button>
+    <button class="week-btn" onclick="selectWeek(2, this)">第 3 週 — は行～わ行</button>
+    <button class="week-btn" onclick="selectWeek(3, this)">全部一起看</button>
+  </div>
+
+  <div id="kana-tip" class="kana-tip-box"></div>
+  <p class="audio-hint">點卡片：顯示記憶口訣 · 點「發音」按鈕：聽日語 · 雙擊：標記已學會</p>
+
+  <div class="kana-grid" id="kana-grid"></div>
+
+  <div style="font-size:13px; color:var(--muted); margin-top:8px; display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+    已學會 <strong id="mastered-count">0</strong> / 46 個假名
+    <button onclick="resetMastered()" style="font-size:12px; background:none; border:1px solid var(--border); border-radius:6px; padding:3px 10px; cursor:pointer; color:var(--muted);">重置</button>
+    <button class="hw-mode-btn active" id="hw-toggle" onclick="toggleHandwriting()">✏️ 手寫練習</button>
+  </div>
+
+  <div id="hw-panel" style="margin-top:16px; display:none;">
+    <div class="hw-container">
+      <div class="hw-header">
+        <div>
+          <div style="display:flex;align-items:baseline;gap:10px;">
+            <div style="font-size:22px; font-weight:600;" id="hw-char-label">あ</div>
+            <div style="font-size:13px; color:var(--muted);" id="hw-char-rom">a</div>
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-top:3px;" id="hw-kanji-origin"></div>
+        </div>
+        <div class="hw-nav">
+          <button class="hw-nav-btn" onclick="hwPrev()">‹</button>
+          <span class="hw-progress-text" id="hw-progress">1 / 46</span>
+          <button class="hw-nav-btn" onclick="hwNext()">›</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none;">
+          <input type="checkbox" id="hw-voice-toggle" checked style="width:16px;height:16px;accent-color:var(--coral);cursor:pointer;">
+          播放語音
+        </label>
+      </div>
+      <div class="hw-canvas-wrap">
+        <div id="hw-stroke-div" style="display:none; position:relative;"></div>
+        <div style="position:relative;" id="hw-write-wrap">
+          <canvas id="hw-canvas" width="320" height="280"></canvas>
+          <div class="hw-char-display" id="hw-ghost"></div>
+        </div>
+      </div>
+      <div class="hw-result" id="hw-result"></div>
+      <div class="hw-actions">
+        <button class="hw-btn" onclick="hwStrokeOrder()" id="hw-stroke-btn">看筆順</button>
+        <button class="hw-btn" onclick="hwClear()">清除</button>
+        <button class="hw-btn" onclick="hwToggleGuide()" id="hw-guide-btn">顯示範字</button>
+        <button class="hw-btn primary" onclick="hwDone()">寫好了 ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHRASES -->
+<div class="panel" id="panel-phrases">
+  <div class="scene-tabs" id="scene-tabs"></div>
+  <div class="phrase-list" id="phrase-list"></div>
+</div>
+
+<!-- AI PRACTICE -->
+<div class="panel" id="panel-practice">
+  <div class="api-key-row">
+    <label>OpenRouter API Key</label>
+    <input type="password" id="api-key-input" placeholder="sk-or-v1-..." />
+    <button class="api-save-btn" onclick="saveApiKey()">儲存</button>
+  </div>
+  <p class="api-notice">
+    API Key 僅存在你的瀏覽器本機（localStorage），不會上傳到任何伺服器。<br>
+    取得方式：前往 <a href="https://openrouter.ai/settings/keys" target="_blank" style="color:var(--coral)">openrouter.ai/settings/keys</a> → Create Key（免費，使用 Gemini 2.0 Flash 免費模型）
+  </p>
+
+  <div class="section-title">選擇練習情境</div>
+  <div class="ai-scene-select" id="ai-scene-select"></div>
+
+  <div class="chat-area" id="chat-area" style="display:none">
+    <div class="chat-header"><div class="dot"></div> <span id="chat-scene-name">飯店接待員</span>正在等待...</div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="jp-keyboard" id="jp-keyboard">
+      <div class="jp-kb-tabs">
+        <button class="jp-kb-tab active" onclick="switchKbMode('hira')">平假名</button>
+        <button class="jp-kb-tab" onclick="switchKbMode('kata')">片假名</button>
+        <button class="jp-kb-tab" onclick="switchKbMode('hide')">收起鍵盤</button>
+      </div>
+      <div class="jp-kb-grid" id="jp-kb-grid"></div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="點上方假名輸入，或直接打字..." onkeydown="if(event.key==='Enter') sendMsg()" />
+      <button class="send-btn" id="send-btn" onclick="sendMsg()">送出</button>
+    </div>
+  </div>
+
+  <div class="hint-chips" id="hint-chips" style="display:none"></div>
+</div>
+
+<!-- QUIZ -->
+<div class="panel" id="panel-quiz">
+  <div id="quiz-start">
+    <div class="quiz-start">
+      <div style="font-size:56px; margin-bottom:16px;">📝</div>
+      <h2>每日測驗</h2>
+      <p>10 題混合測驗，包含假名辨認和旅遊短句。<br>每天測一次，追蹤記憶進度！</p>
+      <button class="start-btn" onclick="startQuiz()">開始測驗</button>
+    </div>
+  </div>
+  <div id="quiz-game" class="hidden">
+    <div class="quiz-progress">
+      <span>第 <span id="q-num">1</span> / 10 題</span>
+      <span class="q-score">得分 <span id="q-score">0</span></span>
+      <div style="flex:1"><div class="progress-bar-wrap"><div class="progress-bar" id="q-bar" style="width:0%"></div></div></div>
+    </div>
+    <div class="quiz-q">
+      <div class="quiz-prompt-label" id="q-label"></div>
+      <div class="quiz-question" id="q-question"></div>
+    </div>
+    <div class="quiz-options" id="q-options"></div>
+  </div>
+  <div id="quiz-result" class="hidden">
+    <div class="quiz-result">
+      <div class="result-score" id="result-score">8/10</div>
+      <div class="result-msg" id="result-msg"></div>
+      <div class="result-sub" id="result-sub"></div>
+      <button class="retry-btn" onclick="startQuiz()">再來一次</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const HIRAGANA = [
+  { char: 'あ', rom: 'a', tip: '像「阿」字，嘴巴大開', week: 0, kanji: '安' },
+  { char: 'い', rom: 'i', tip: '像笑臉「伊」，嘴角上揚', week: 0, kanji: '以' },
+  { char: 'う', rom: 'u', tip: '嘴唇微圓，「烏」', week: 0, kanji: '宇' },
+  { char: 'え', rom: 'e', tip: '像「恩」的起始，嘴半開', week: 0, kanji: '衣' },
+  { char: 'お', rom: 'o', tip: '嘴唇圓，「哦」', week: 0, kanji: '於' },
+  { char: 'か', rom: 'ka', tip: '「卡」，像一個人彎腰', week: 0, kanji: '加' },
+  { char: 'き', rom: 'ki', tip: '「機」，像一個鑰匙', week: 0, kanji: '幾' },
+  { char: 'く', rom: 'ku', tip: '「酷」，像箭頭朝右', week: 0, kanji: '久' },
+  { char: 'け', rom: 'ke', tip: '「客」，像柵欄', week: 0, kanji: '計' },
+  { char: 'こ', rom: 'ko', tip: '「渴」，像兩條平行線', week: 0, kanji: '己' },
+  { char: 'さ', rom: 'sa', tip: '「沙」，像草叢', week: 1, kanji: '左' },
+  { char: 'し', rom: 'shi', tip: '「西」，像魚鉤', week: 1, kanji: '之' },
+  { char: 'す', rom: 'su', tip: '「蘇」，像漩渦', week: 1, kanji: '寸' },
+  { char: 'せ', rom: 'se', tip: '「誰」，像 SE 字樣', week: 1, kanji: '世' },
+  { char: 'そ', rom: 'so', tip: '「索」，像波浪', week: 1, kanji: '曽' },
+  { char: 'た', rom: 'ta', tip: '「他」，像飛翔的鳥', week: 1, kanji: '太' },
+  { char: 'ち', rom: 'chi', tip: '「七」，日文中發「奇」音', week: 1, kanji: '知' },
+  { char: 'つ', rom: 'tsu', tip: '「刺」，像跳躍的波浪', week: 1, kanji: '川' },
+  { char: 'て', rom: 'te', tip: '「特」，像一根柱子加帽子', week: 1, kanji: '天' },
+  { char: 'と', rom: 'to', tip: '「投」，像一把劍', week: 1, kanji: '止' },
+  { char: 'な', rom: 'na', tip: '「那」，像字母 na', week: 1, kanji: '奈' },
+  { char: 'に', rom: 'ni', tip: '「你」，像兩條平行線', week: 1, kanji: '仁' },
+  { char: 'ぬ', rom: 'nu', tip: '「奴」，像線條糾纏', week: 1, kanji: '奴' },
+  { char: 'ね', rom: 'ne', tip: '「內」，像貓的尾巴', week: 1, kanji: '祢' },
+  { char: 'の', rom: 'no', tip: '「の」，的、之，像漩渦', week: 1, kanji: '乃' },
+  { char: 'は', rom: 'ha', tip: '「哈」，像一個人站立', week: 2, kanji: '波' },
+  { char: 'ひ', rom: 'hi', tip: '「嗨」，像笑臉', week: 2, kanji: '比' },
+  { char: 'ふ', rom: 'fu', tip: '「富」，像富士山', week: 2, kanji: '不' },
+  { char: 'へ', rom: 'he', tip: '「黑」，像山的輪廓', week: 2, kanji: '部' },
+  { char: 'ほ', rom: 'ho', tip: '「呵」，像兩個 h', week: 2, kanji: '保' },
+  { char: 'ま', rom: 'ma', tip: '「媽」，像一個十字', week: 2, kanji: '末' },
+  { char: 'み', rom: 'mi', tip: '「米」，像蛇形', week: 2, kanji: '美' },
+  { char: 'む', rom: 'mu', tip: '「木」，像牛頭', week: 2, kanji: '武' },
+  { char: 'め', rom: 'me', tip: '「目」，像眼睛', week: 2, kanji: '女' },
+  { char: 'も', rom: 'mo', tip: '「毛」，像魚鉤加橫', week: 2, kanji: '毛' },
+  { char: 'や', rom: 'ya', tip: '「呀」，像三角形', week: 2, kanji: '也' },
+  { char: 'ゆ', rom: 'yu', tip: '「玉」，像魚', week: 2, kanji: '由' },
+  { char: 'よ', rom: 'yo', tip: '「唷」，像英文 3', week: 2, kanji: '与' },
+  { char: 'ら', rom: 'ra', tip: '「拉」，像らせん（螺旋）', week: 2, kanji: '良' },
+  { char: 'り', rom: 'ri', tip: '「里」，像兩條垂直線', week: 2, kanji: '利' },
+  { char: 'る', rom: 'ru', tip: '「魯」，像魚鉤', week: 2, kanji: '留' },
+  { char: 'れ', rom: 're', tip: '「路」，像草書 re', week: 2, kanji: '礼' },
+  { char: 'ろ', rom: 'ro', tip: '「羅」，像不完整的る', week: 2, kanji: '呂' },
+  { char: 'わ', rom: 'wa', tip: '「蛙」，像倒過來的う', week: 2, kanji: '和' },
+  { char: 'を', rom: 'wo/o', tip: '「喔」，受詞標記，常用！', week: 2, kanji: '遠' },
+  { char: 'ん', rom: 'n', tip: '「嗯」，鼻音，字尾最常見', week: 2, kanji: null },
+];
+
+const SCENES = [
+  { id: 'hotel', icon: '🏨', name: '飯店入住', desc: 'Check-in / 客房需求', system: `你是沖繩飯店的接待員，正在跟台灣初學者旅客對話。規則：每次只說1句日語，句子後面括號加正體中文翻譯。不要一次說多句。對話要自然簡短，像真實接待一樣。若對方說中文，幫他翻成日語讓他跟著說。場景：客人剛抵達辦理入住。` },
+  { id: 'restaurant', icon: '🍜', name: '餐廳點餐', desc: '點菜 / 結帳 / 過敏', system: `你是沖繩和食餐廳服務生，正在跟台灣初學者旅客對話。規則：每次只說1句日語，句子後面括號加正體中文翻譯。不要一次說多句。對話自然簡短。若對方說中文，幫他翻成日語讓他跟著說。場景：客人走進餐廳。` },
+  { id: 'car', icon: '🚗', name: '租車取車', desc: '租車 / 導航 / 加油', system: `你是沖繩租車公司服務員，正在跟台灣初學者旅客對話。規則：每次只說1句日語，句子後面括號加正體中文翻譯。不要一次說多句。對話自然簡短。若對方說中文，幫他翻成日語。場景：客人來取車。` },
+  { id: 'theme-park', icon: '🎢', name: '遊樂園', desc: '入場 / 設施 / 小孩票', system: `你是沖繩美麗海水族館入口工作人員，正在跟帶小孩的台灣初學者旅客對話。規則：每次只說1句日語，句子後面括號加正體中文翻譯。不要一次說多句。對話自然簡短。若對方說中文，幫他翻成日語。場景：客人在入口詢問票價。` },
+  { id: 'convenience', icon: '🏪', name: '便利商店', desc: '結帳 / 問路 / 購物', system: `你是沖繩 FamilyMart 店員，正在跟台灣初學者旅客對話。規則：每次只說1句日語，句子後面括號加正體中文翻譯。不要一次說多句。對話自然簡短。若對方說中文，幫他翻成日語讓他跟著說。場景：客人結帳。` },
+  { id: 'emergency', icon: '🚨', name: '緊急狀況', desc: '急診 / 遺失 / 求助', system: `你是沖繩醫院急診室護理師，正在跟台灣初學者旅客對話。規則：每次只說1句日語，句子後面括號加正體中文翻譯。不要一次說多句。對話自然簡短。若對方說中文，幫他翻成日語。場景：旅客帶著不舒服的小孩來急診。` },
+];
+
+const PHRASES = {
+  hotel: {
+    label: '🏨 飯店',
+    phrases: [
+      { jp: 'チェックインをお願いします', reading: 'chekku-in o onegaishimasu', zh: '我要辦理入住', tags: ['must'] },
+      { jp: '予約した（名前）です', reading: 'yoyaku shita _____ desu', zh: '我有預約，名字是＿＿', tags: ['must'] },
+      { jp: 'Wi-Fiのパスワードは何ですか？', reading: 'wai-fai no pasuwādo wa nan desu ka?', zh: 'Wi-Fi 密碼是什麼？', tags: [] },
+      { jp: 'タオルをもう一枚ください', reading: 'taoru o mō ichimai kudasai', zh: '請再給我一條毛巾', tags: [] },
+      { jp: 'チェックアウトは何時ですか？', reading: 'chekku-auto wa nanji desu ka?', zh: '退房時間是幾點？', tags: [] },
+      { jp: 'エアコンの使い方を教えてください', reading: 'eakon no tsukaikata o oshiete kudasai', zh: '請教我冷氣怎麼用', tags: [] },
+    ]
+  },
+  restaurant: {
+    label: '🍜 餐廳',
+    phrases: [
+      { jp: '二名です', reading: 'futari desu', zh: '兩位（三位＝三名・さんめい）', tags: ['must'] },
+      { jp: 'これをください', reading: 'kore o kudasai', zh: '我要點這個（指菜單）', tags: ['must'] },
+      { jp: 'おすすめは何ですか？', reading: 'osusume wa nan desu ka?', zh: '有什麼推薦嗎？', tags: [] },
+      { jp: 'お会計をお願いします', reading: 'okaikei o onegaishimasu', zh: '麻煩結帳', tags: ['must'] },
+      { jp: 'カードで払えますか？', reading: 'kādo de haraemasu ka?', zh: '可以刷卡嗎？', tags: [] },
+      { jp: 'アレルギーがあります', reading: 'arerugī ga arimasu', zh: '我有過敏（＋食物名稱）', tags: [] },
+    ]
+  },
+  car: {
+    label: '🚗 租車',
+    phrases: [
+      { jp: 'レンタカーを借りたいです', reading: 'rentakā o karitai desu', zh: '我想租一輛車', tags: ['must'] },
+      { jp: 'カーナビの使い方を教えてください', reading: 'kānabi no tsukaikata o oshiete kudasai', zh: '請教我怎麼用衛星導航', tags: [] },
+      { jp: 'ガソリンスタンドはどこですか？', reading: 'gasorin-sutando wa doko desu ka?', zh: '加油站在哪裡？', tags: [] },
+      { jp: '駐車場はありますか？', reading: 'chūshajō wa arimasu ka?', zh: '有停車場嗎？', tags: [] },
+      { jp: 'ここで止めてもいいですか？', reading: 'koko de tomete mo ii desu ka?', zh: '可以在這裡停車嗎？', tags: [] },
+    ]
+  },
+  park: {
+    label: '🎢 遊樂園',
+    phrases: [
+      { jp: '子ども料金はいくらですか？', reading: 'kodomo ryōkin wa ikura desu ka?', zh: '兒童票多少錢？', tags: ['must'] },
+      { jp: 'このアトラクションは何歳から？', reading: 'kono atorakushon wa nansai kara?', zh: '這個設施幾歲以上才能搭？', tags: [] },
+      { jp: 'トイレはどこですか？', reading: 'toire wa doko desu ka?', zh: '廁所在哪裡？', tags: ['must'] },
+      { jp: '写真を撮ってもいいですか？', reading: 'shashin o totte mo ii desu ka?', zh: '可以拍照嗎？', tags: [] },
+      { jp: '迷子になりました', reading: 'maigo ni narimashita', zh: '我（小孩）迷路了', tags: [] },
+    ]
+  },
+  emergency: {
+    label: '🚨 緊急',
+    phrases: [
+      { jp: '助けてください！', reading: 'tasukete kudasai!', zh: '請救救我！', tags: ['must'] },
+      { jp: '病院はどこですか？', reading: 'byōin wa doko desu ka?', zh: '醫院在哪裡？', tags: ['must'] },
+      { jp: '救急車を呼んでください', reading: 'kyūkyūsha o yonde kudasai', zh: '請叫救護車', tags: ['must'] },
+      { jp: '財布をなくしました', reading: 'saifu o nakushimashita', zh: '我的錢包不見了', tags: [] },
+      { jp: '日本語があまり話せません', reading: 'nihongo ga amari hanasemasen', zh: '我日語說得不太好', tags: [] },
+      { jp: '英語を話せる人はいますか？', reading: 'eigo o hanaseru hito wa imasu ka?', zh: '有人會說英語嗎？', tags: [] },
+    ]
+  }
+};
+
+const QUIZ_POOL = [
+  { type: 'kana', q: 'あ', opts: ['a', 'i', 'u', 'e'], ans: 0 },
+  { type: 'kana', q: 'き', opts: ['ka', 'ki', 'ku', 'ke'], ans: 1 },
+  { type: 'kana', q: 'さ', opts: ['sa', 'shi', 'su', 'se'], ans: 0 },
+  { type: 'kana', q: 'て', opts: ['ta', 'chi', 'tsu', 'te'], ans: 3 },
+  { type: 'kana', q: 'の', opts: ['na', 'ni', 'nu', 'no'], ans: 3 },
+  { type: 'kana', q: 'は', opts: ['ha', 'hi', 'fu', 'ho'], ans: 0 },
+  { type: 'kana', q: 'め', opts: ['ma', 'mi', 'me', 'mo'], ans: 2 },
+  { type: 'kana', q: 'ゆ', opts: ['ya', 'yu', 'yo', 'wa'], ans: 1 },
+  { type: 'kana', q: 'ん', opts: ['ra', 'ru', 'wa', 'n'], ans: 3 },
+  { type: 'kana', q: 'つ', opts: ['ta', 'chi', 'tsu', 'te'], ans: 2 },
+  { type: 'phrase', q: 'おすすめは何ですか？\nosusume wa nan desu ka?', opts: ['我要辦理入住', '有什麼推薦嗎？', '可以刷卡嗎？', '麻煩結帳'], ans: 1 },
+  { type: 'phrase', q: 'お会計をお願いします\nokaikei o onegaishimasu', opts: ['麻煩結帳', '我想租一輛車', '廁所在哪裡？', '請救救我'], ans: 0 },
+  { type: 'phrase', q: '助けてください！\ntasukete kudasai', opts: ['有什麼推薦嗎？', '可以拍照嗎？', '請救救我！', '我的錢包不見了'], ans: 2 },
+  { type: 'phrase', q: 'トイレはどこですか？\ntoire wa doko desu ka?', opts: ['有停車場嗎？', '廁所在哪裡？', '加油站在哪裡？', '醫院在哪裡？'], ans: 1 },
+  { type: 'phrase', q: 'チェックインをお願いします\nchekku-in o onegaishimasu', opts: ['我要退房', '我要訂房', '我要辦理入住', '我要結帳'], ans: 2 },
+];
+
+let masteredKana = JSON.parse(localStorage.getItem('mastered') || '[]');
+let currentWeek = 0;
+let apiKey = localStorage.getItem('apiKey') || '';
+let chatHistory = [];
+let selectedScene = null;
+let quizState = { questions: [], current: 0, score: 0 };
+let todayTasks = JSON.parse(localStorage.getItem('tasks_' + today()) || '{}');
+
+function today() { return new Date().toISOString().slice(0,10); }
+
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  const navTab = [...document.querySelectorAll('.nav-tab')].find(t => t.onclick?.toString().includes(name));
+  if (navTab) navTab.classList.add('active');
+  const bnavBtn = document.querySelector(`.bnav-btn[data-panel="${name}"]`);
+  if (bnavBtn) bnavBtn.classList.add('active');
+}
+
+function updateCountdown() {
+  const target = new Date('2025-09-05');
+  const now = new Date();
+  const diff = Math.ceil((target - now) / 86400000);
+  const el = document.getElementById('days-left');
+  const badge = document.getElementById('countdown-badge');
+  if (el) el.textContent = diff > 0 ? diff : '已出發！';
+  if (badge) badge.textContent = diff > 0 ? `出發倒數 ${diff} 天` : '旅途愉快！';
+}
+
+function updateStats() {
+  const mc = masteredKana.length;
+  document.getElementById('stat-kana').innerHTML = `${mc}<span class="stat-unit">/ 46</span>`;
+  document.getElementById('bar-kana').style.width = Math.round(mc/46*100) + '%';
+  const score = localStorage.getItem('lastQuizScore');
+  if (score) {
+    document.getElementById('stat-quiz').innerHTML = `${score}<span class="stat-unit">分</span>`;
+    document.getElementById('bar-quiz').style.width = score + '%';
+  }
+  document.getElementById('mastered-count') && (document.getElementById('mastered-count').textContent = mc);
+}
+
+function renderKana() {
+  const grid = document.getElementById('kana-grid');
+  if (!grid) return;
+  const filtered = currentWeek === 3 ? HIRAGANA : HIRAGANA.filter(k => k.week === currentWeek);
+  grid.innerHTML = '';
+  filtered.forEach((k) => {
+    const div = document.createElement('div');
+    div.className = 'kana-card' + (masteredKana.includes(k.char) ? ' mastered' : '');
+    div.innerHTML = `
+      <div class="kana-char">${k.char}</div>
+      <div class="kana-rom">${k.rom}</div>
+      <button class="kana-say-btn" data-jp="${k.char}" title="點擊發音">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        發音
+      </button>`;
+
+    div.querySelector('.kana-say-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      speak(k.char);
+    });
+
+    div.addEventListener('click', () => {
+      const tip = document.getElementById('kana-tip');
+      tip.textContent = `${k.char}（${k.rom}）— ${k.tip}`;
+    });
+
+    div.addEventListener('dblclick', () => {
+      if (masteredKana.includes(k.char)) {
+        masteredKana = masteredKana.filter(c => c !== k.char);
+      } else {
+        masteredKana.push(k.char);
+      }
+      localStorage.setItem('mastered', JSON.stringify(masteredKana));
+      renderKana();
+      updateStats();
+    });
+
+    grid.appendChild(div);
+  });
+}
+
+function selectWeek(w, btn) {
+  currentWeek = w;
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderKana();
+}
+
+function resetMastered() {
+  if (confirm('確定要重置所有已學會的假名嗎？')) {
+    masteredKana = [];
+    localStorage.setItem('mastered', '[]');
+    renderKana();
+    updateStats();
+  }
+}
+
+function speak(text) {
+  if (!window.speechSynthesis) { alert('你的瀏覽器不支援語音功能，建議使用 Chrome 或 Edge'); return; }
+  window.speechSynthesis.cancel();
+  const doSpeak = () => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ja-JP';
+    utter.rate = 0.8;
+    const voices = window.speechSynthesis.getVoices();
+    const jaVoice = voices.find(v => v.lang.startsWith('ja'));
+    if (jaVoice) utter.voice = jaVoice;
+    window.speechSynthesis.speak(utter);
+  };
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) { doSpeak(); }
+  else { window.speechSynthesis.onvoiceschanged = doSpeak; window.speechSynthesis.getVoices(); }
+}
+
+function renderPhrases() {
+  const tabsEl = document.getElementById('scene-tabs');
+  const listEl = document.getElementById('phrase-list');
+  if (!tabsEl) return;
+
+  const sceneKeys = Object.keys(PHRASES);
+  let activeScene = sceneKeys[0];
+
+  function draw(key) {
+    activeScene = key;
+    tabsEl.querySelectorAll('.scene-btn').forEach(b => b.classList.toggle('active', b.dataset.scene === key));
+    const data = PHRASES[key];
+    listEl.innerHTML = data.phrases.map((p, i) => `
+      <div class="phrase-card" id="phrase-card-${key}-${i}">
+        <div class="phrase-top">
+          <div>
+            <div class="phrase-jp">${p.jp}</div>
+            <div class="phrase-reading">${p.reading}</div>
+            <div class="phrase-zh">${p.zh}</div>
+          </div>
+          <div class="phrase-btns">
+            <button class="say-btn" data-jp="${p.jp}" title="播放發音">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              聽
+            </button>
+            <button class="rec-btn" data-jp="${p.jp}" data-zh="${p.zh}" data-card="phrase-card-${key}-${i}" title="錄音評分">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+              說說看
+            </button>
+          </div>
+        </div>
+        <div class="phrase-tags">
+          ${p.tags.includes('must') ? '<span class="phrase-tag must">必學</span>' : ''}
+          <span class="phrase-tag">${data.label.split(' ').slice(1).join(' ')}</span>
+        </div>
+        <div class="phrase-feedback" id="feedback-${key}-${i}"></div>
+      </div>
+    `).join('');
+  }
+
+  tabsEl.innerHTML = sceneKeys.map(k => `<button class="scene-btn" data-scene="${k}" onclick="(function(){${sceneKeys.map(sk=>`document.querySelector('.scene-btn[data-scene=${sk}]').classList.${sk===k?'add':'remove'}('active')`).join(';')};renderPhrasesScene('${k}')})()">${PHRASES[k].label}</button>`).join('');
+
+  window.renderPhrasesScene = draw;
+  draw(sceneKeys[0]);
+  tabsEl.querySelector('.scene-btn').classList.add('active');
+
+  listEl.addEventListener('click', e => {
+    const sayBtn = e.target.closest('.say-btn');
+    if (sayBtn && sayBtn.dataset.jp) speak(sayBtn.dataset.jp);
+    const recBtn = e.target.closest('.rec-btn');
+    if (recBtn) startPronunciationCheck(recBtn);
+  });
+}
+
+let activeRecBtn = null;
+let speechRecognition = null;
+
+function startPronunciationCheck(btn) {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('你的瀏覽器不支援語音辨識，請使用 Chrome 或 Edge');
+    return;
+  }
+
+  if (activeRecBtn && activeRecBtn !== btn) {
+    stopRecognition();
+  }
+
+  if (btn.classList.contains('recording')) {
+    stopRecognition();
+    return;
+  }
+
+  const jp = btn.dataset.jp;
+  const zh = btn.dataset.zh;
+  const cardId = btn.dataset.card;
+  const feedbackId = cardId.replace('phrase-card-', 'feedback-');
+  const feedbackEl = document.getElementById(feedbackId);
+
+  btn.classList.add('recording');
+  btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> 錄音中...`;
+  activeRecBtn = btn;
+
+  feedbackEl.className = 'phrase-feedback loading show';
+  feedbackEl.innerHTML = '🎙️ 請說出這句話...';
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechRecognition = new SR();
+  speechRecognition.lang = 'ja-JP';
+  speechRecognition.interimResults = false;
+  speechRecognition.maxAlternatives = 3;
+
+  speechRecognition.onresult = async (e) => {
+    const heard = Array.from(e.results[0]).map(r => r.transcript).join(' / ');
+    const best = e.results[0][0].transcript;
+    stopRecognition();
+
+    feedbackEl.className = 'phrase-feedback loading show';
+    feedbackEl.innerHTML = `<div class="heard-text">聽到：「${heard}」</div>AI 評分中...`;
+
+    if (!apiKey) {
+      feedbackEl.className = 'phrase-feedback warn show';
+      feedbackEl.innerHTML = `<div class="heard-text">聽到：「${heard}」</div>⚠️ 請先設定 API Key 才能取得 AI 評分`;
+      return;
+    }
+
+    try {
+      const result = await callGemini(
+        `你是日語發音評分老師。使用者要念的句子是「${jp}」（中文意思：${zh}）。語音辨識聽到的是「${best}」。請用正體中文簡短評分：1) 是否念對了（對/部分對/不對）2) 哪裡有問題 3) 一句改進建議。回覆控制在3句以內，不要列點。`,
+        [], '請評分'
+      );
+      const isGood = best === jp || result.includes('對') || result.includes('正確') || result.includes('很好');
+      feedbackEl.className = `phrase-feedback ${isGood ? 'good' : 'warn'} show`;
+      feedbackEl.innerHTML = `<div class="heard-text">聽到：「${heard}」</div>${result}`;
+    } catch(err) {
+      feedbackEl.className = 'phrase-feedback warn show';
+      feedbackEl.innerHTML = `<div class="heard-text">聽到：「${heard}」</div>⚠️ AI 評分失敗：${err.message}`;
+    }
+  };
+
+  speechRecognition.onerror = (e) => {
+    stopRecognition();
+    feedbackEl.className = 'phrase-feedback warn show';
+    const msg = e.error === 'no-speech' ? '沒有偵測到聲音，請再試一次' : e.error === 'not-allowed' ? '請允許麥克風權限' : `辨識失敗：${e.error}`;
+    feedbackEl.innerHTML = `⚠️ ${msg}`;
+  };
+
+  speechRecognition.onend = () => { stopRecognition(); };
+  speechRecognition.start();
+}
+
+function stopRecognition() {
+  if (speechRecognition) { try { speechRecognition.stop(); } catch(e) {} speechRecognition = null; }
+  if (activeRecBtn) {
+    activeRecBtn.classList.remove('recording');
+    activeRecBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg> 說說看`;
+    activeRecBtn = null;
+  }
+}
+
+function renderAIScenes() {
+  const el = document.getElementById('ai-scene-select');
+  if (!el) return;
+  el.innerHTML = SCENES.map(s => `
+    <div class="ai-scene-card" onclick="selectAIScene('${s.id}')">
+      <div class="ai-scene-icon">${s.icon}</div>
+      <div class="ai-scene-name">${s.name}</div>
+      <div class="ai-scene-desc">${s.desc}</div>
+    </div>
+  `).join('');
+  if (apiKey) document.getElementById('api-key-input').value = apiKey;
+}
+
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val) { alert('請輸入 API Key'); return; }
+  apiKey = val;
+  localStorage.setItem('apiKey', apiKey);
+  const stored = localStorage.getItem('apiKey');
+  if (stored === val) {
+    alert(`✅ 已儲存！Key 開頭：${val.slice(0, 12)}...`);
+  } else {
+    alert('❌ 儲存失敗，請再試一次');
+  }
+}
+
+async function selectAIScene(id) {
+  if (!apiKey) { alert('請先輸入 OpenRouter API Key！'); return; }
+  selectedScene = SCENES.find(s => s.id === id);
+  chatHistory = [];
+  document.querySelectorAll('.ai-scene-card').forEach(c => c.classList.toggle('selected', c.onclick.toString().includes(id)));
+  document.getElementById('chat-area').style.display = '';
+  document.getElementById('chat-scene-name').textContent = selectedScene.name + ' 角色扮演';
+  document.getElementById('chat-messages').innerHTML = '';
+
+  const hints = {
+    hotel: ['チェックインをお願いします', '何時にチェックアウトですか？', 'Wi-Fiのパスワードは？'],
+    restaurant: ['二名です', 'おすすめは何ですか？', 'お会計をお願いします'],
+    car: ['レンタカーを借りたいです', 'ガソリンスタンドはどこ？', '駐車場はありますか？'],
+    'theme-park': ['子ども料金はいくら？', 'トイレはどこですか？', '何歳から乗れますか？'],
+    convenience: ['これをください', 'ここはどこですか？', 'カードで払えますか？'],
+    emergency: ['助けてください！', '病院はどこですか？', '救急車を呼んでください'],
+  };
+
+  const hintEl = document.getElementById('hint-chips');
+  hintEl.style.display = 'flex';
+  hintEl.innerHTML = '<span style="font-size:12px;color:var(--muted);align-self:center;">快速回應：</span>' +
+    (hints[id] || []).map(h => `<button class="hint-chip" onclick="document.getElementById('chat-input').value='${h}';sendMsg()">${h}</button>`).join('');
+
+  appendMsg('ai', `${selectedScene.icon} 開始「${selectedScene.name}」情境練習！<br>你可以用中文或日語說話，我會扮演${selectedScene.name}的工作人員，用日語回應並附上中文翻譯。<br><br>準備好了嗎？讓我們開始！`);
+  await aiGreet();
+}
+
+function extractJapanese(text) {
+  return text
+    .replace(/<br>/g, '\n')
+    .replace(/（[^）]*）/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/【[^】]*】/g, '')
+    .replace(/\[[^\]]*\]/g, '')
+    .replace(/<[^>]+>/g, '')
+    .trim();
+}
+
+function appendMsg(role, text, autoPlay = false) {
+  const box = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+
+  if (role === 'ai') {
+    const jpText = extractJapanese(text);
+    const playBtn = document.createElement('button');
+    playBtn.className = 'msg-play-btn';
+    playBtn.title = '播放日語發音';
+    playBtn.innerHTML = '<svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><polygon points="0,0 9,5 0,10"/></svg>';
+    playBtn.addEventListener('click', () => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        playBtn.classList.remove('playing');
+        return;
+      }
+      playBtn.classList.add('playing');
+      const utter = new SpeechSynthesisUtterance(jpText);
+      utter.lang = 'ja-JP';
+      utter.rate = 0.8;
+      const voices = window.speechSynthesis.getVoices();
+      const jaVoice = voices.find(v => v.lang.startsWith('ja'));
+      if (jaVoice) utter.voice = jaVoice;
+      utter.onend = () => playBtn.classList.remove('playing');
+      window.speechSynthesis.speak(utter);
+    });
+
+    const label = document.createElement('div');
+    label.className = 'msg-label';
+    label.appendChild(document.createTextNode('日語老師'));
+    label.appendChild(playBtn);
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.innerHTML = text;
+
+    div.appendChild(label);
+    div.appendChild(bubble);
+
+    if (autoPlay && jpText) {
+      setTimeout(() => playBtn.click(), 300);
+    }
+  } else {
+    div.innerHTML = `<div class="msg-label" style="justify-content:flex-end">你</div><div class="msg-bubble">${text}</div>`;
+  }
+
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function aiGreet() {
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  const loadDiv = document.createElement('div');
+  loadDiv.className = 'msg ai';
+  loadDiv.innerHTML = '<div class="msg-label">日語老師</div><div class="msg-bubble loading-dots">思考中</div>';
+  document.getElementById('chat-messages').appendChild(loadDiv);
+
+  try {
+    const resp = await callGemini(selectedScene.system, [], '請用日語打招呼，歡迎客人，開始情境對話。');
+    loadDiv.remove();
+    chatHistory.push({ role: 'assistant', content: resp });
+    appendMsg('ai', resp.replace(/\n/g, '<br>'), true);
+  } catch(e) {
+    loadDiv.remove();
+    appendMsg('ai', '⚠️ 連線失敗，請確認 API Key 是否正確。');
+  }
+  btn.disabled = false;
+}
+
+async function sendMsg() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || !selectedScene) return;
+  input.value = '';
+  appendMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  const loadDiv = document.createElement('div');
+  loadDiv.className = 'msg ai';
+  loadDiv.innerHTML = '<div class="msg-label">日語老師</div><div class="msg-bubble loading-dots">回應中</div>';
+  document.getElementById('chat-messages').appendChild(loadDiv);
+  document.getElementById('chat-messages').scrollTop = 9999;
+
+  try {
+    const resp = await callGemini(selectedScene.system, chatHistory.slice(-10), text);
+    loadDiv.remove();
+    chatHistory.push({ role: 'assistant', content: resp });
+    appendMsg('ai', resp.replace(/\n/g, '<br>'), true);
+  } catch(e) {
+    loadDiv.remove();
+    appendMsg('ai', '⚠️ 請求失敗：' + e.message);
+  }
+  btn.disabled = false;
+}
+
+const FREE_MODELS = [
+  'openrouter/free',
+  'google/gemma-3-27b-it:free',
+  'mistralai/mistral-7b-instruct:free',
+];
+let modelIndex = 0;
+
+async function callGemini(system, history, userMsg) {
+  if (!apiKey) throw new Error('API Key 未設定，請先儲存 Key');
+  console.log('使用 Key 開頭：', apiKey.slice(0, 12) + '...');
+
+  const messages = [
+    { role: 'system', content: system },
+    ...history.map(m => ({ role: m.role, content: m.content })),
+    { role: 'user', content: userMsg }
+  ];
+
+  for (let attempt = 0; attempt < FREE_MODELS.length; attempt++) {
+    const model = FREE_MODELS[(modelIndex + attempt) % FREE_MODELS.length];
+    console.log(`嘗試模型 [${attempt + 1}/${FREE_MODELS.length}]:`, model);
+    const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'HTTP-Referer': 'https://okinawa-japanese-study.local',
+        'X-Title': 'Okinawa Japanese Study'
+      },
+      body: JSON.stringify({ model, messages, max_tokens: 600, temperature: 0.7 })
+    });
+
+    if (resp.status === 429 || resp.status === 404) {
+      console.warn(`模型 ${model} 回應 ${resp.status}，切換下一個`);
+      modelIndex = (modelIndex + 1) % FREE_MODELS.length;
+      continue;
+    }
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `API 錯誤 ${resp.status}`);
+    }
+    const data = await resp.json();
+    const msg = data.choices?.[0]?.message;
+    let text = (msg?.content || '').trim();
+    if (!text) {
+      console.warn('空回應，換下一個模型');
+      modelIndex = (modelIndex + 1) % FREE_MODELS.length;
+      continue;
+    }
+    text = text.replace(/^(User Safety:.*?\n|Okay,?\s+let'?s\s+tackle\s+this[\s\S]*?(?=\n\n)|<think>[\s\S]*?<\/think>\s*)/i, '').trim();
+    if (text) { console.log('成功，使用模型:', model); return text; }
+    console.warn('過濾後空白，換下一個模型');
+    modelIndex = (modelIndex + 1) % FREE_MODELS.length;
+  }
+  throw new Error('所有免費模型暫時無法使用，請稍等 1 分鐘後再試');
+}
+
+function startQuiz() {
+  const pool = [...QUIZ_POOL].sort(() => Math.random() - 0.5).slice(0, 10);
+  quizState = { questions: pool, current: 0, score: 0 };
+  document.getElementById('quiz-start').classList.add('hidden');
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-game').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = quizState.questions[quizState.current];
+  const num = quizState.current + 1;
+  document.getElementById('q-num').textContent = num;
+  document.getElementById('q-score').textContent = quizState.score;
+  document.getElementById('q-bar').style.width = Math.round((num-1)/10*100) + '%';
+
+  const qEl = document.getElementById('q-question');
+  qEl.className = q.type === 'kana' ? 'quiz-question' : 'quiz-question sm';
+  qEl.textContent = q.q;
+  document.getElementById('q-label').textContent = q.type === 'kana' ? '這個假名的羅馬字是？' : '這句話的意思是？';
+
+  const optsEl = document.getElementById('q-options');
+  optsEl.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = o;
+    btn.onclick = () => answerQuiz(i, q.ans);
+    optsEl.appendChild(btn);
+  });
+}
+
+function answerQuiz(chosen, correct) {
+  const btns = document.querySelectorAll('.quiz-opt');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    if (i === chosen && chosen !== correct) b.classList.add('wrong');
+  });
+  if (chosen === correct) quizState.score++;
+
+  setTimeout(() => {
+    quizState.current++;
+    if (quizState.current >= 10) {
+      finishQuiz();
+    } else {
+      showQuestion();
+    }
+  }, 900);
+}
+
+function finishQuiz() {
+  document.getElementById('quiz-game').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizState.score / 10 * 100);
+  document.getElementById('result-score').textContent = quizState.score + '/10';
+  const msgs = ['繼續努力！多練幾次一定進步', '不錯喔！再加把勁', '很好！已經掌握基礎了', '太厲害了！沖繩準備好迎接你！'];
+  const subs = ['建議再看一次五十音和短句', '試試 AI 對話練習加強聽說', '可以挑戰更多旅遊情境短句', '可以開始練習更複雜的對話了'];
+  const idx = quizState.score <= 4 ? 0 : quizState.score <= 6 ? 1 : quizState.score <= 8 ? 2 : 3;
+  document.getElementById('result-msg').textContent = msgs[idx];
+  document.getElementById('result-sub').textContent = subs[idx];
+  localStorage.setItem('lastQuizScore', pct);
+  updateStats();
+}
+
+function toggleTask(el, panel) {
+  el.classList.toggle('done');
+  todayTasks[panel] = el.classList.contains('done');
+  localStorage.setItem('tasks_' + today(), JSON.stringify(todayTasks));
+}
+
+
+const HIRAGANA_KB = [
+  ['あ','い','う','え','お'],
+  ['か','き','く','け','こ'],
+  ['さ','し','す','せ','そ'],
+  ['た','ち','つ','て','と'],
+  ['な','に','ぬ','ね','の'],
+  ['は','ひ','ふ','へ','ほ'],
+  ['ま','み','む','め','も'],
+  ['や','　','ゆ','　','よ'],
+  ['ら','り','る','れ','ろ'],
+  ['わ','を','ん','゛','゜'],
+];
+const KATAKANA_KB = [
+  ['ア','イ','ウ','エ','オ'],
+  ['カ','キ','ク','ケ','コ'],
+  ['サ','シ','ス','セ','ソ'],
+  ['タ','チ','ツ','テ','ト'],
+  ['ナ','ニ','ヌ','ネ','ノ'],
+  ['ハ','ヒ','フ','ヘ','ホ'],
+  ['マ','ミ','ム','メ','モ'],
+  ['ヤ','　','ユ','　','ヨ'],
+  ['ラ','リ','ル','レ','ロ'],
+  ['ワ','ヲ','ン','ー','・'],
+];
+const KB_ROM = ['a','i','u','e','o','ka','ki','ku','ke','ko','sa','shi','su','se','so','ta','chi','tsu','te','to','na','ni','nu','ne','no','ha','hi','fu','he','ho','ma','mi','mu','me','mo','ya','','yu','','yo','ra','ri','ru','re','ro','wa','wo','n','',''];
+let kbMode = 'hira';
+
+function renderKeyboard() {
+  const grid = document.getElementById('jp-kb-grid');
+  if (!grid) return;
+  const rows = kbMode === 'hira' ? HIRAGANA_KB : KATAKANA_KB;
+  grid.innerHTML = '';
+  rows.forEach((row, ri) => {
+    row.forEach((ch, ci) => {
+      const btn = document.createElement('button');
+      const idx = ri * 5 + ci;
+      const rom = KB_ROM[idx] || '';
+      if (ch.trim() === '') {
+        btn.className = 'jp-key special';
+        btn.style.visibility = 'hidden';
+      } else if (ch === '゛' || ch === '゜' || ch === 'ー' || ch === '・') {
+        btn.className = 'jp-key special';
+        btn.textContent = ch;
+        btn.addEventListener('click', () => insertChar(ch));
+      } else {
+        btn.className = 'jp-key';
+        btn.innerHTML = `${ch}<span class="rom">${rom}</span>`;
+        btn.addEventListener('click', () => insertChar(ch));
+      }
+      grid.appendChild(btn);
+    });
+  });
+  const spRow = document.createElement('div');
+  spRow.style.cssText = 'grid-column:1/-1; display:flex; gap:4px; margin-top:2px;';
+  ['、','。','？','！','～'].forEach(ch => {
+    const b = document.createElement('button');
+    b.className = 'jp-key special';
+    b.style.flex = '1';
+    b.textContent = ch;
+    b.addEventListener('click', () => insertChar(ch));
+    spRow.appendChild(b);
+  });
+  const bsp = document.createElement('button');
+  bsp.className = 'jp-key special';
+  bsp.style.flex = '1';
+  bsp.innerHTML = '⌫';
+  bsp.addEventListener('click', () => {
+    const inp = document.getElementById('chat-input');
+    inp.value = inp.value.slice(0, -1);
+    inp.focus();
+  });
+  spRow.appendChild(bsp);
+  grid.appendChild(spRow);
+}
+
+function insertChar(ch) {
+  const inp = document.getElementById('chat-input');
+  const pos = inp.selectionStart;
+  inp.value = inp.value.slice(0, pos) + ch + inp.value.slice(pos);
+  inp.selectionStart = inp.selectionEnd = pos + 1;
+  inp.focus();
+}
+
+function switchKbMode(mode) {
+  document.querySelectorAll('.jp-kb-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['hira','kata','hide'][i] === mode);
+  });
+  const kb = document.getElementById('jp-kb-grid').parentElement;
+  if (mode === 'hide') {
+    document.getElementById('jp-kb-grid').style.display = 'none';
+    document.querySelectorAll('.jp-kb-tab')[2].textContent = '顯示鍵盤';
+    document.querySelectorAll('.jp-kb-tab')[2].onclick = () => switchKbMode('hira');
+  } else {
+    kbMode = mode;
+    document.getElementById('jp-kb-grid').style.display = '';
+    document.querySelectorAll('.jp-kb-tab')[2].textContent = '收起鍵盤';
+    document.querySelectorAll('.jp-kb-tab')[2].onclick = () => switchKbMode('hide');
+    renderKeyboard();
+  }
+}
+
+let hwIndex = 0;
+let hwDrawing = false;
+let hwShowGuide = false;
+let hwCtx = null;
+let hwWriter = null;
+
+function initHandwriting() {
+  const canvas = document.getElementById('hw-canvas');
+  if (!canvas || hwCtx) return;
+  const wrap = document.getElementById('hw-write-wrap');
+  const size = Math.min(wrap.offsetWidth || 300, 340);
+  canvas.width = size;
+  canvas.height = size;
+  hwCtx = canvas.getContext('2d');
+  hwCtx.strokeStyle = '#1a2744';
+  hwCtx.lineWidth = Math.max(3, size / 80);
+  hwCtx.lineCap = 'round';
+  hwCtx.lineJoin = 'round';
+
+  const getPos = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - rect.left) * (canvas.width / rect.width), y: (src.clientY - rect.top) * (canvas.height / rect.height) };
+  };
+
+  canvas.addEventListener('pointerdown', e => {
+    hwDrawing = true;
+    const p = getPos(e);
+    hwCtx.beginPath();
+    hwCtx.moveTo(p.x, p.y);
+    e.preventDefault();
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (!hwDrawing) return;
+    const p = getPos(e);
+    hwCtx.lineTo(p.x, p.y);
+    hwCtx.stroke();
+    e.preventDefault();
+  });
+  canvas.addEventListener('pointerup', () => { hwDrawing = false; });
+  canvas.addEventListener('pointerleave', () => { hwDrawing = false; });
+
+  hwUpdateDisplay();
+}
+
+function hwUpdateDisplay() {
+  const k = HIRAGANA[hwIndex];
+  document.getElementById('hw-char-label').textContent = k.char;
+  document.getElementById('hw-char-rom').textContent = k.rom;
+  document.getElementById('hw-progress').textContent = `${hwIndex + 1} / ${HIRAGANA.length}`;
+  document.getElementById('hw-result').textContent = '';
+  document.getElementById('hw-result').className = 'hw-result';
+  const originEl = document.getElementById('hw-kanji-origin');
+  if (k.kanji) {
+    originEl.innerHTML = `源自漢字 <span style="font-size:16px;font-weight:500;color:var(--ink);margin:0 2px">${k.kanji}</span> 的草書`;
+  } else {
+    originEl.textContent = '純音標符號，無漢字來源';
+  }
+  const ghost = document.getElementById('hw-ghost');
+  ghost.textContent = hwShowGuide ? k.char : '';
+  ghost.style.opacity = hwShowGuide ? '0.15' : '0';
+  document.getElementById('hw-stroke-btn').textContent = '看筆順';
+  document.getElementById('hw-stroke-btn').disabled = false;
+  const strokeDiv = document.getElementById('hw-stroke-div');
+  const writeWrap = document.getElementById('hw-write-wrap');
+  strokeDiv.style.display = 'none';
+  writeWrap.style.display = '';
+  if (hwWriter) { hwWriter = null; strokeDiv.innerHTML = ''; }
+  hwClear(false);
+}
+
+function hwStrokeOrder() {
+  const k = HIRAGANA[hwIndex];
+  const btn = document.getElementById('hw-stroke-btn');
+  const strokeDiv = document.getElementById('hw-stroke-div');
+  const writeWrap = document.getElementById('hw-write-wrap');
+
+  if (strokeDiv.style.display !== 'none') {
+    strokeDiv.style.display = 'none';
+    writeWrap.style.display = '';
+    btn.textContent = '看筆順';
+    return;
+  }
+
+  btn.textContent = '載入中...';
+  btn.disabled = true;
+  strokeDiv.innerHTML = '';
+
+  const canvas = document.getElementById('hw-canvas');
+  const size = canvas.width || 300;
+  strokeDiv.style.cssText = `width:${size}px;height:${size}px;display:block;`;
+
+  if (!window.HanziWriter) {
+    btn.textContent = '看筆順';
+    btn.disabled = false;
+    document.getElementById('hw-result').textContent = '⚠️ 請確認網路連線後重試';
+    document.getElementById('hw-result').className = 'hw-result ok';
+    return;
+  }
+
+  try {
+    hwWriter = HanziWriter.create(strokeDiv, k.char, {
+      width: size,
+      height: size,
+      padding: size * 0.1,
+      strokeColor: '#1a2744',
+      outlineColor: '#e5e2db',
+      drawingColor: '#e8594a',
+      showOutline: true,
+      strokeAnimationSpeed: 1,
+      delayBetweenStrokes: 400,
+      showCharacter: true,
+      charDataLoader: (char, onLoad, onError) => {
+        fetch(`https://cdn.jsdelivr.net/gh/ailectra/kana-json@v0.0.1/data/${encodeURIComponent(char)}.json`)
+          .then(r => { if (!r.ok) throw new Error('no data'); return r.json(); })
+          .then(onLoad)
+          .catch(onError);
+      },
+      onLoadCharDataSuccess: () => {
+        btn.textContent = '關閉';
+        btn.disabled = false;
+        writeWrap.style.display = 'none';
+        strokeDiv.style.display = 'block';
+        HanziWriter.drawGridLines(strokeDiv.querySelector('svg') || strokeDiv, { strokeColor: 'rgba(26,39,68,0.08)' });
+        hwWriter.animateCharacter();
+        const voiceOn = document.getElementById('hw-voice-toggle')?.checked !== false;
+        if (voiceOn) speak(k.char);
+      },
+      onLoadCharDataError: () => {
+        btn.textContent = '看筆順';
+        btn.disabled = false;
+        strokeDiv.style.display = 'none';
+        writeWrap.style.display = '';
+        document.getElementById('hw-result').textContent = '⚠️ 此假名暫無筆順資料';
+        document.getElementById('hw-result').className = 'hw-result ok';
+      }
+    });
+  } catch(e) {
+    btn.textContent = '看筆順';
+    btn.disabled = false;
+  }
+}
+
+function hwClear(resetResult = true) {
+  if (!hwCtx) return;
+  const canvas = document.getElementById('hw-canvas');
+  hwCtx.clearRect(0, 0, canvas.width, canvas.height);
+  if (hwShowGuide) drawGuide();
+  if (resetResult) {
+    document.getElementById('hw-result').textContent = '';
+    document.getElementById('hw-result').className = 'hw-result';
+  }
+}
+
+function drawGuide() {
+  if (!hwCtx) return;
+  const canvas = document.getElementById('hw-canvas');
+  const k = HIRAGANA[hwIndex];
+  const cw = canvas.width, ch = canvas.height;
+  hwCtx.save();
+
+  hwCtx.strokeStyle = 'rgba(26,39,68,0.06)';
+  hwCtx.lineWidth = 1;
+  hwCtx.setLineDash([4, 4]);
+  hwCtx.beginPath();
+  hwCtx.moveTo(cw / 2, 0); hwCtx.lineTo(cw / 2, ch);
+  hwCtx.moveTo(0, ch / 2); hwCtx.lineTo(cw, ch / 2);
+  hwCtx.stroke();
+  hwCtx.setLineDash([]);
+
+  const fontSize = Math.floor(ch * 0.7);
+  hwCtx.font = `${fontSize}px 'Hiragino Sans', 'Noto Sans JP', serif`;
+  hwCtx.fillStyle = 'rgba(26,39,68,0.1)';
+  hwCtx.textAlign = 'center';
+  hwCtx.textBaseline = 'alphabetic';
+  const metrics = hwCtx.measureText(k.char);
+  const textH = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+  const y = ch / 2 + metrics.actualBoundingBoxAscent - textH / 2;
+  hwCtx.fillText(k.char, cw / 2, y);
+  hwCtx.restore();
+}
+
+function hwToggleGuide() {
+  hwShowGuide = !hwShowGuide;
+  document.getElementById('hw-guide-btn').textContent = hwShowGuide ? '隱藏範字' : '顯示範字';
+  hwClear(false);
+  if (hwShowGuide) drawGuide();
+}
+
+function hwDone() {
+  const canvas = document.getElementById('hw-canvas');
+  const data = hwCtx.getImageData(0, 0, canvas.width, canvas.height).data;
+  let hasStroke = false;
+  for (let i = 3; i < data.length; i += 4) { if (data[i] > 10) { hasStroke = true; break; } }
+  const resultEl = document.getElementById('hw-result');
+  if (!hasStroke) {
+    resultEl.textContent = '還沒寫喔！用手指在上面描寫 ' + HIRAGANA[hwIndex].char;
+    resultEl.className = 'hw-result ok';
+    return;
+  }
+  const msgs = ['寫得不錯！', '加油，多練幾次！', '繼續保持！', '看起來很像了！'];
+  resultEl.textContent = msgs[Math.floor(Math.random() * msgs.length)] + '  下一個 →';
+  resultEl.className = 'hw-result good';
+  if (!masteredKana.includes(HIRAGANA[hwIndex].char)) {
+    masteredKana.push(HIRAGANA[hwIndex].char);
+    localStorage.setItem('mastered', JSON.stringify(masteredKana));
+    updateStats();
+  }
+  setTimeout(() => hwNext(), 800);
+}
+
+function hwNext() {
+  hwWriter = null;
+  hwIndex = (hwIndex + 1) % HIRAGANA.length;
+  hwUpdateDisplay();
+}
+
+function hwPrev() {
+  hwWriter = null;
+  hwIndex = (hwIndex - 1 + HIRAGANA.length) % HIRAGANA.length;
+  hwUpdateDisplay();
+}
+
+function toggleHandwriting() {
+  const panel = document.getElementById('hw-panel');
+  const btn = document.getElementById('hw-toggle');
+  const showing = panel.style.display !== 'none';
+  panel.style.display = showing ? 'none' : 'block';
+  btn.classList.toggle('active', !showing);
+  if (!showing) {
+    setTimeout(() => { initHandwriting(); }, 50);
+  }
+}
+
+(function init() {
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+  if (window.speechSynthesis) window.speechSynthesis.getVoices();
+  Object.keys(todayTasks).forEach(k => {
+    if (todayTasks[k]) {
+      const rows = document.querySelectorAll('.task-row');
+      rows.forEach(r => { if (r.onclick && r.onclick.toString().includes(k)) r.classList.add('done'); });
+    }
+  });
+  renderKana();
+  renderPhrases();
+  renderAIScenes();
+  renderKeyboard();
+  updateStats();
+  if (apiKey) document.getElementById('api-key-input').value = apiKey;
+})();
+</script>
+</body>
+</html>
