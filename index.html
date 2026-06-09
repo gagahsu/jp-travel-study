@@ -1473,7 +1473,7 @@ function hwStrokeOrder() {
       delayBetweenStrokes: 400,
       showCharacter: true,
       charDataLoader: (char, onLoad, onError) => {
-        fetch(`https://raw.githubusercontent.com/ailectra/kana-json/main/data/${encodeURIComponent(char)}.json`)
+        fetch(`./data/${encodeURIComponent(char)}.json`)
           .then(r => { if (!r.ok) throw new Error('no data'); return r.json(); })
           .then(onLoad)
           .catch(onError);
