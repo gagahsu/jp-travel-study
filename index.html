@@ -402,6 +402,10 @@
     <div class="hw-container">
       <div class="hw-header">
         <div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+            <button class="hw-mode-btn active" id="hw-tab-hira" onclick="hwSwitchKana('hira')">平假名</button>
+            <button class="hw-mode-btn" id="hw-tab-kata" onclick="hwSwitchKana('kata')">片假名</button>
+          </div>
           <div style="display:flex;align-items:baseline;gap:10px;">
             <div style="font-size:22px; font-weight:600;" id="hw-char-label">あ</div>
             <div style="font-size:13px; color:var(--muted);" id="hw-char-rom">a</div>
@@ -557,6 +561,55 @@ const HIRAGANA = [
   { char: 'わ', rom: 'wa', tip: '「蛙」，像倒過來的う', week: 2, kanji: '和' },
   { char: 'を', rom: 'wo/o', tip: '「喔」，受詞標記，常用！', week: 2, kanji: '遠' },
   { char: 'ん', rom: 'n', tip: '「嗯」，鼻音，字尾最常見', week: 2, kanji: null },
+];
+
+const KATAKANA = [
+  { char: 'ア', rom: 'a',   tip: '源自「阿」，有稜有角', kanji: '阿' },
+  { char: 'イ', rom: 'i',   tip: '源自「伊」，像一撇一豎', kanji: '伊' },
+  { char: 'ウ', rom: 'u',   tip: '源自「宇」，像帶冠的冂', kanji: '宇' },
+  { char: 'エ', rom: 'e',   tip: '源自「江」，像工字形', kanji: '江' },
+  { char: 'オ', rom: 'o',   tip: '源自「於」，像十字加撇', kanji: '於' },
+  { char: 'カ', rom: 'ka',  tip: '源自「加」，像刀字', kanji: '加' },
+  { char: 'キ', rom: 'ki',  tip: '源自「幾」，像三橫加豎', kanji: '幾' },
+  { char: 'ク', rom: 'ku',  tip: '源自「久」，像鳥喙', kanji: '久' },
+  { char: 'ケ', rom: 'ke',  tip: '源自「介」，像三支針', kanji: '介' },
+  { char: 'コ', rom: 'ko',  tip: '源自「己」，像倒 C', kanji: '己' },
+  { char: 'サ', rom: 'sa',  tip: '源自「散」，三線交叉', kanji: '散' },
+  { char: 'シ', rom: 'shi', tip: '源自「之」，三點橫排', kanji: '之' },
+  { char: 'ス', rom: 'su',  tip: '源自「須」，像鑰匙', kanji: '須' },
+  { char: 'セ', rom: 'se',  tip: '源自「世」，一橫加撇豎', kanji: '世' },
+  { char: 'ソ', rom: 'so',  tip: '源自「曽」，兩點加撇', kanji: '曽' },
+  { char: 'タ', rom: 'ta',  tip: '源自「多」，橫撇加豎撇', kanji: '多' },
+  { char: 'チ', rom: 'chi', tip: '源自「千」，二橫加曲豎', kanji: '千' },
+  { char: 'ツ', rom: 'tsu', tip: '源自「川」，三點縱排', kanji: '川' },
+  { char: 'テ', rom: 'te',  tip: '源自「天」，三橫加豎', kanji: '天' },
+  { char: 'ト', rom: 'to',  tip: '源自「止」，豎加短橫', kanji: '止' },
+  { char: 'ナ', rom: 'na',  tip: '源自「奈」，十字加撇', kanji: '奈' },
+  { char: 'ニ', rom: 'ni',  tip: '源自「仁」，兩條橫線', kanji: '仁' },
+  { char: 'ヌ', rom: 'nu',  tip: '源自「奴」，橫加曲撇', kanji: '奴' },
+  { char: 'ネ', rom: 'ne',  tip: '源自「祢」，像示字旁', kanji: '祢' },
+  { char: 'ノ', rom: 'no',  tip: '源自「乃」，一撇到底', kanji: '乃' },
+  { char: 'ハ', rom: 'ha',  tip: '源自「八」，八字形', kanji: '八' },
+  { char: 'ヒ', rom: 'hi',  tip: '源自「比」，像 F 加底', kanji: '比' },
+  { char: 'フ', rom: 'fu',  tip: '源自「不」，橫折鉤', kanji: '不' },
+  { char: 'ヘ', rom: 'he',  tip: '源自「部」，像山稜（與へ相同）', kanji: '部' },
+  { char: 'ホ', rom: 'ho',  tip: '源自「保」，十字加兩撇', kanji: '保' },
+  { char: 'マ', rom: 'ma',  tip: '源自「末」，橫折加點', kanji: '末' },
+  { char: 'ミ', rom: 'mi',  tip: '源自「三」，三條橫線', kanji: '三' },
+  { char: 'ム', rom: 'mu',  tip: '源自「牟」，像牛鼻子', kanji: '牟' },
+  { char: 'メ', rom: 'me',  tip: '源自「女」，像叉叉', kanji: '女' },
+  { char: 'モ', rom: 'mo',  tip: '源自「毛」，三橫加豎', kanji: '毛' },
+  { char: 'ヤ', rom: 'ya',  tip: '源自「也」，有稜角感', kanji: '也' },
+  { char: 'ユ', rom: 'yu',  tip: '源自「由」，像有角的 U', kanji: '由' },
+  { char: 'ヨ', rom: 'yo',  tip: '源自「与」，三橫加豎', kanji: '与' },
+  { char: 'ラ', rom: 'ra',  tip: '源自「良」，橫折加豎', kanji: '良' },
+  { char: 'リ', rom: 'ri',  tip: '源自「利」，兩豎線', kanji: '利' },
+  { char: 'ル', rom: 'ru',  tip: '源自「流」，撇加彎折', kanji: '流' },
+  { char: 'レ', rom: 're',  tip: '源自「礼」，一撇加腳', kanji: '礼' },
+  { char: 'ロ', rom: 'ro',  tip: '源自「呂」，方框形', kanji: '呂' },
+  { char: 'ワ', rom: 'wa',  tip: '源自「和」，像 7 字', kanji: '和' },
+  { char: 'ヲ', rom: 'wo/o',tip: '源自「遠」，受詞標記', kanji: '遠' },
+  { char: 'ン', rom: 'n',   tip: '源自「尓」，兩點加撇', kanji: '尓' },
 ];
 
 const SCENES = [
@@ -1291,10 +1344,25 @@ function switchKbMode(mode) {
 }
 
 let hwIndex = 0;
+let hwKanaType = 'hira';
 let hwDrawing = false;
 let hwShowGuide = false;
 let hwCtx = null;
 let hwWriter = null;
+
+function hwCurrentList() {
+  return hwKanaType === 'kata' ? KATAKANA : HIRAGANA;
+}
+
+function hwSwitchKana(type) {
+  if (hwKanaType === type) return;
+  hwKanaType = type;
+  hwIndex = 0;
+  hwWriter = null;
+  document.getElementById('hw-tab-hira').classList.toggle('active', type === 'hira');
+  document.getElementById('hw-tab-kata').classList.toggle('active', type === 'kata');
+  hwUpdateDisplay();
+}
 
 function initHandwriting() {
   const canvas = document.getElementById('hw-canvas');
@@ -1336,15 +1404,17 @@ function initHandwriting() {
 }
 
 function hwUpdateDisplay() {
-  const k = HIRAGANA[hwIndex];
+  const list = hwCurrentList();
+  const k = list[hwIndex];
   document.getElementById('hw-char-label').textContent = k.char;
   document.getElementById('hw-char-rom').textContent = k.rom;
-  document.getElementById('hw-progress').textContent = `${hwIndex + 1} / ${HIRAGANA.length}`;
+  document.getElementById('hw-progress').textContent = `${hwIndex + 1} / ${list.length}`;
   document.getElementById('hw-result').textContent = '';
   document.getElementById('hw-result').className = 'hw-result';
   const originEl = document.getElementById('hw-kanji-origin');
   if (k.kanji) {
-    originEl.innerHTML = `源自漢字 <span style="font-size:16px;font-weight:500;color:var(--ink);margin:0 2px">${k.kanji}</span> 的草書`;
+    const origin = hwKanaType === 'kata' ? '的楷書偏旁' : '的草書';
+    originEl.innerHTML = `源自漢字 <span style="font-size:16px;font-weight:500;color:var(--ink);margin:0 2px">${k.kanji}</span> ${origin}`;
   } else {
     originEl.textContent = '純音標符號，無漢字來源';
   }
@@ -1362,7 +1432,7 @@ function hwUpdateDisplay() {
 }
 
 function hwStrokeOrder() {
-  const k = HIRAGANA[hwIndex];
+  const k = hwCurrentList()[hwIndex];
   const btn = document.getElementById('hw-stroke-btn');
   const strokeDiv = document.getElementById('hw-stroke-div');
   const writeWrap = document.getElementById('hw-write-wrap');
@@ -1403,7 +1473,7 @@ function hwStrokeOrder() {
       delayBetweenStrokes: 400,
       showCharacter: true,
       charDataLoader: (char, onLoad, onError) => {
-        fetch(`https://cdn.jsdelivr.net/gh/ailectra/kana-json@v0.0.1/data/${encodeURIComponent(char)}.json`)
+        fetch(`https://raw.githubusercontent.com/ailectra/kana-json/main/data/${encodeURIComponent(char)}.json`)
           .then(r => { if (!r.ok) throw new Error('no data'); return r.json(); })
           .then(onLoad)
           .catch(onError);
@@ -1447,7 +1517,7 @@ function hwClear(resetResult = true) {
 function drawGuide() {
   if (!hwCtx) return;
   const canvas = document.getElementById('hw-canvas');
-  const k = HIRAGANA[hwIndex];
+  const k = hwCurrentList()[hwIndex];
   const cw = canvas.width, ch = canvas.height;
   hwCtx.save();
 
@@ -1486,15 +1556,15 @@ function hwDone() {
   for (let i = 3; i < data.length; i += 4) { if (data[i] > 10) { hasStroke = true; break; } }
   const resultEl = document.getElementById('hw-result');
   if (!hasStroke) {
-    resultEl.textContent = '還沒寫喔！用手指在上面描寫 ' + HIRAGANA[hwIndex].char;
+    resultEl.textContent = '還沒寫喔！用手指在上面描寫 ' + hwCurrentList()[hwIndex].char;
     resultEl.className = 'hw-result ok';
     return;
   }
   const msgs = ['寫得不錯！', '加油，多練幾次！', '繼續保持！', '看起來很像了！'];
   resultEl.textContent = msgs[Math.floor(Math.random() * msgs.length)] + '  下一個 →';
   resultEl.className = 'hw-result good';
-  if (!masteredKana.includes(HIRAGANA[hwIndex].char)) {
-    masteredKana.push(HIRAGANA[hwIndex].char);
+  if (!masteredKana.includes(hwCurrentList()[hwIndex].char)) {
+    masteredKana.push(hwCurrentList()[hwIndex].char);
     localStorage.setItem('mastered', JSON.stringify(masteredKana));
     updateStats();
   }
@@ -1503,13 +1573,15 @@ function hwDone() {
 
 function hwNext() {
   hwWriter = null;
-  hwIndex = (hwIndex + 1) % HIRAGANA.length;
+  const len = hwCurrentList().length;
+  hwIndex = (hwIndex + 1) % len;
   hwUpdateDisplay();
 }
 
 function hwPrev() {
   hwWriter = null;
-  hwIndex = (hwIndex - 1 + HIRAGANA.length) % HIRAGANA.length;
+  const len = hwCurrentList().length;
+  hwIndex = (hwIndex - 1 + len) % len;
   hwUpdateDisplay();
 }
 
