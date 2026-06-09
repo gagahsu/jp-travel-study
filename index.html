@@ -1493,7 +1493,6 @@ function hwStrokeOrder() {
         btn.disabled = false;
         writeWrap.style.display = 'none';
         strokeDiv.style.display = 'block';
-        HanziWriter.drawGridLines(strokeDiv.querySelector('svg') || strokeDiv, { strokeColor: 'rgba(26,39,68,0.08)' });
         hwWriter.animateCharacter();
         const voiceOn = document.getElementById('hw-voice-toggle')?.checked !== false;
         if (voiceOn) speak(k.char);
