@@ -1474,10 +1474,22 @@ function hwStrokeOrder() {
       delayBetweenStrokes: 400,
       showCharacter: true,
       charDataLoader: (char, onLoad, onError) => {
+        console.log('[HW] charDataLoader called, char:', char);
+        console.log('[HW] KANA_STROKE_DATA loaded:', !!window.KANA_STROKE_DATA);
         const d = window.KANA_STROKE_DATA && window.KANA_STROKE_DATA[char];
-        if (d) { onLoad(d); } else { onError(); }
+        console.log('[HW] data found for char:', !!d);
+        if (d) {
+          console.log('[HW] calling onLoad with strokes:', d.strokes?.length);
+          try { onLoad(d); console.log('[HW] onLoad returned OK'); }
+          catch(e) { console.error('[HW] onLoad threw:', e); onError(e); }
+        } else {
+          console.warn('[HW] no data, calling onError');
+          onError();
+        }
       },
       onLoadCharDataSuccess: () => {
+        console.log('[HW] onLoadCharDataSuccess fired');
+      },
         btn.textContent = '關閉';
         btn.disabled = false;
         writeWrap.style.display = 'none';
@@ -1487,7 +1499,8 @@ function hwStrokeOrder() {
         const voiceOn = document.getElementById('hw-voice-toggle')?.checked !== false;
         if (voiceOn) speak(k.char);
       },
-      onLoadCharDataError: () => {
+      onLoadCharDataError: (e) => {
+        console.error('[HW] onLoadCharDataError fired, reason:', e);
         btn.textContent = '看筆順';
         btn.disabled = false;
         strokeDiv.style.display = 'none';
